@@ -1,0 +1,50 @@
+#!/bin/bash
+
+dims(){
+	MATRIX=$1
+	if [ -z "$MATRIX"  ] || [ -n "$2" ]; then
+		>&2 echo "RRRRRRREEEEEEEEEE"
+		exit 1
+	fi
+	echo "add"
+}
+
+transpose(){
+	MATRIX=$1
+	if [ -z "$MATRIX"  ] || [ -n "$2" ]; then
+		>&2 echo "RRRRRRREEEEEEEEEE"
+		exit 1
+	fi
+	echo "add"
+}
+
+mean(){
+	MATRIX=$1
+	if [ -z "$MATRIX"  ] || [ -n "$2" ]; then
+		>&2 echo "RRRRRRREEEEEEEEEE"
+		exit 1
+	fi
+	echo "add"
+}
+
+add(){
+	MATRIX_LEFT=$1
+	MATRIX_RIGHT=$2
+	if [ -z "$MATRIX_LEFT"  ] || [ -z "$MATRIX_RIGHT"  ] || [ -n "$3" ] ; then
+		>&2 echo "RRRRRRREEEEEEEEEE"
+		exit 1
+	fi
+	echo "add"
+}
+
+multiply(){
+	MATRIX_LEFT=$1
+	MATRIX_RIGHT=$2
+	if [ -z "$MATRIX_LEFT"  ] || [ -z "$MATRIX_RIGHT"  ] || [ -n "$3" ] ; then
+		>&2 echo "RRRRRRREEEEEEEEEE"
+		exit 1
+	fi
+	echo "mul"
+}
+
+$1 "${@:2}"
