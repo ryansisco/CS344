@@ -18,10 +18,19 @@ dims(){
 		# after checking for valid input, rows then columns are printed
 	#AUTHOR
 		# Written by Ryan Sisco (siscor@oregonstate.edu)
+
 	MATRIX=$1
-	if [ -z "$MATRIX"  ] || [ -n "$2" ]; then
+	if [ -z "$MATRIX"  ] || [ -n "$2" ]; then # command-line-arg validation
 		>&2 echo "RRRRRRREEEEEEEEEE"
 		exit 1
+	elif [ -e "$MATRIX" ]; then
+		if ! [ -f "$MATRIX" ] || ! [ -r "$MATRIX" ]; then
+			>&2 echo "RRRRRRREEEEEEEEEE"
+			exit 1	
+		fi
+	else 
+		>&2 echo "RRRRRRREEEEEEEEEE"
+		exit 1		
 	fi
 }
 
@@ -34,11 +43,21 @@ transpose(){
 		# The rows and columns will switch, the data will remain unchanged
 	#AUTHOR
 		# Written by Ryan Sisco (siscor@oregonstate.edu)
+
 	MATRIX=$1
-	if [ -z "$MATRIX"  ] || [ -n "$2" ]; then
+	if [ -z "$MATRIX"  ] || [ -n "$2" ]; then # command-line-arg validation
 		>&2 echo "RRRRRRREEEEEEEEEE"
 		exit 1
-	fi
+	elif [ -e "$MATRIX" ]; then
+		if ! [ -f "$MATRIX" ] || ! [ -r "$MATRIX" ]; then
+			>&2 echo "RRRRRRREEEEEEEEEE"
+			exit 1	
+		fi
+	else 
+		>&2 echo "RRRRRRREEEEEEEEEE"
+		exit 1		
+	fi	
+
 }
 
 mean(){
@@ -50,10 +69,19 @@ mean(){
 		# all numbers will be added then divided by the total input
 	#AUTHOR
 		# Written by Ryan Sisco (siscor@oregonstate.edu)
+
 	MATRIX=$1
-	if [ -z "$MATRIX"  ] || [ -n "$2" ]; then
+	if [ -z "$MATRIX"  ] || [ -n "$2" ]; then # command-line-arg validation
 		>&2 echo "RRRRRRREEEEEEEEEE"
 		exit 1
+	elif [ -e "$MATRIX" ]; then
+		if ! [ -f "$MATRIX" ]  || ! [ -r "$MATRIX" ]; then
+			>&2 echo "RRRRRRREEEEEEEEEE"
+			exit 1	
+		fi
+	else 
+		>&2 echo "RRRRRRREEEEEEEEEE"
+		exit 1		
 	fi
 }
 
@@ -66,12 +94,32 @@ add(){
 		# 2 arrays will be added if they are able to be
 	#AUTHOR
 		# Written by Ryan Sisco (siscor@oregonstate.edu)
+
 	MATRIX_LEFT=$1
 	MATRIX_RIGHT=$2
-	if [ -z "$MATRIX_LEFT"  ] || [ -z "$MATRIX_RIGHT"  ] || [ -n "$3" ] ; then
+	if [ -z "$MATRIX_LEFT"  ] || [ -z "$MATRIX_RIGHT"  ] || [ -n "$3" ]; then # command-line-arg validation
 		>&2 echo "RRRRRRREEEEEEEEEE"
 		exit 1
 	fi
+
+	if [ -e "$MATRIX_LEFT" ]; then # if file exits...
+		if ! [ -f "$MATRIX_LEFT" ]  || ! [ -r "$MATRIX_LEFT" ]; then # and it's not regular...
+			>&2 echo "RRRRRRREEEEEEEEEE"
+			exit 1	
+		fi
+	else 
+		>&2 echo "RRRRRRREEEEEEEEEE"
+		exit 1		
+	fi	
+	if [ -e "$MATRIX_RIGHT" ]; then # if file exits...
+		if ! [ -f "$MATRIX_RIGHT" ]  || ! [ -r "$MATRIX_RIGHT" ]; then # and it's not regular...
+			>&2 echo "RRRRRRREEEEEEEEEE"
+			exit 1
+		fi
+	else 
+		>&2 echo "RRRRRRREEEEEEEEEE"
+		exit 1				
+	fi	
 }
 
 multiply(){
@@ -83,12 +131,32 @@ multiply(){
 		# 2 arrays will be multiplied if they are able to be
 	#AUTHOR
 		# Written by Ryan Sisco (siscor@oregonstate.edu)
+
 	MATRIX_LEFT=$1
 	MATRIX_RIGHT=$2
-	if [ -z "$MATRIX_LEFT"  ] || [ -z "$MATRIX_RIGHT"  ] || [ -n "$3" ] ; then
+	if [ -z "$MATRIX_LEFT"  ] || [ -z "$MATRIX_RIGHT"  ] || [ -n "$3" ]; then # command-line-arg validation
 		>&2 echo "RRRRRRREEEEEEEEEE"
 		exit 1
 	fi
+
+	if [ -e "$MATRIX_LEFT" ]; then # if file exits...
+		if ! [ -f "$MATRIX_LEFT" ]   || ! [ -r "$MATRIX_LEFT" ]; then # and it's not regular...
+			>&2 echo "RRRRRRREEEEEEEEEE"
+			exit 1	
+		fi
+	else 
+		>&2 echo "RRRRRRREEEEEEEEEE"
+		exit 1		
+	fi	
+	if [ -e "$MATRIX_RIGHT" ]; then # if file exits...
+		if ! [ -f "$MATRIX_RIGHT" ]  || ! [ -r "$MATRIX_RIGHT" ]; then # and it's not regular...
+			>&2 echo "RRRRRRREEEEEEEEEE"
+			exit 1
+		fi
+	else 
+		>&2 echo "RRRRRRREEEEEEEEEE"
+		exit 1				
+	fi	
 }
 
 $1 "${@:2}"
