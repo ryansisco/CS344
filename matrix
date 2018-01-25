@@ -1,50 +1,94 @@
 #!/bin/bash
 
+###############################################################################
+# Begin helper functions
+#   dims() - lists dimentions of a given matrix
+#   transpose() - transposes a given matrix
+#   mean() - gives the mean of a given matrix
+#   add() - adds two given matrices
+#   multiply() - multiplies two given matrices
+###############################################################################
+
 dims(){
+	#NAME
+		# dims - lists dimensions of matrix
+	#SYNOPSIS
+		# outputs rows and columns of matrix
+	#DESCRIPTION
+		# after checking for valid input, rows then columns are printed
+	#AUTHOR
+		# Written by Ryan Sisco (siscor@oregonstate.edu)
 	MATRIX=$1
 	if [ -z "$MATRIX"  ] || [ -n "$2" ]; then
 		>&2 echo "RRRRRRREEEEEEEEEE"
 		exit 1
 	fi
-	echo "add"
 }
 
 transpose(){
+	#NAME
+		# transpose - inverses matrix
+	#SYNOPSIS
+		# x changes to y and y to x
+	#DESCRIPTION
+		# The rows and columns will switch, the data will remain unchanged
+	#AUTHOR
+		# Written by Ryan Sisco (siscor@oregonstate.edu)
 	MATRIX=$1
 	if [ -z "$MATRIX"  ] || [ -n "$2" ]; then
 		>&2 echo "RRRRRRREEEEEEEEEE"
 		exit 1
 	fi
-	echo "add"
 }
 
 mean(){
+	#NAME
+		# mean - finds average of matrix
+	#SYNOPSIS
+		# average in a matrix will be printed
+	#DESCRIPTION
+		# all numbers will be added then divided by the total input
+	#AUTHOR
+		# Written by Ryan Sisco (siscor@oregonstate.edu)
 	MATRIX=$1
 	if [ -z "$MATRIX"  ] || [ -n "$2" ]; then
 		>&2 echo "RRRRRRREEEEEEEEEE"
 		exit 1
 	fi
-	echo "add"
 }
 
 add(){
+	#NAME
+		# add - adds matrix
+	#SYNOPSIS
+		# 2 arrays will be added
+	#DESCRIPTION
+		# 2 arrays will be added if they are able to be
+	#AUTHOR
+		# Written by Ryan Sisco (siscor@oregonstate.edu)
 	MATRIX_LEFT=$1
 	MATRIX_RIGHT=$2
 	if [ -z "$MATRIX_LEFT"  ] || [ -z "$MATRIX_RIGHT"  ] || [ -n "$3" ] ; then
 		>&2 echo "RRRRRRREEEEEEEEEE"
 		exit 1
 	fi
-	echo "add"
 }
 
 multiply(){
+	#NAME
+		# multiply - multiplies matrix
+	#SYNOPSIS
+		# 2 arrays will be multiplied
+	#DESCRIPTION
+		# 2 arrays will be multiplied if they are able to be
+	#AUTHOR
+		# Written by Ryan Sisco (siscor@oregonstate.edu)
 	MATRIX_LEFT=$1
 	MATRIX_RIGHT=$2
 	if [ -z "$MATRIX_LEFT"  ] || [ -z "$MATRIX_RIGHT"  ] || [ -n "$3" ] ; then
 		>&2 echo "RRRRRRREEEEEEEEEE"
 		exit 1
 	fi
-	echo "mul"
 }
 
 $1 "${@:2}"
