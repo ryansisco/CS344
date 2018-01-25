@@ -21,15 +21,15 @@ dims(){
 
 	MATRIX=$1
 	if [ -z "$MATRIX"  ] || [ -n "$2" ]; then # command-line-arg validation
-		>&2 echo "RRRRRRREEEEEEEEEE"
+		>&2 echo "ERROR: Invalid Arguments"
 		exit 1
-	elif [ -e "$MATRIX" ]; then
-		if ! [ -f "$MATRIX" ] || ! [ -r "$MATRIX" ]; then
-			>&2 echo "RRRRRRREEEEEEEEEE"
+	elif [ -e "$MATRIX" ]; then # if file exits...
+		if ! [ -f "$MATRIX" ] || ! [ -r "$MATRIX" ]; then # and it's not regular or readable...
+			>&2 echo "ERROR: Bad File"
 			exit 1	
 		fi
 	else 
-		>&2 echo "RRRRRRREEEEEEEEEE"
+		>&2 echo "ERROR: File Doesn't Exist"
 		exit 1		
 	fi
 }
@@ -46,15 +46,15 @@ transpose(){
 
 	MATRIX=$1
 	if [ -z "$MATRIX"  ] || [ -n "$2" ]; then # command-line-arg validation
-		>&2 echo "RRRRRRREEEEEEEEEE"
+		>&2 echo "ERROR: Invalid Arguments"
 		exit 1
-	elif [ -e "$MATRIX" ]; then
-		if ! [ -f "$MATRIX" ] || ! [ -r "$MATRIX" ]; then
-			>&2 echo "RRRRRRREEEEEEEEEE"
+	elif [ -e "$MATRIX" ]; then # if file exits...
+		if ! [ -f "$MATRIX" ] || ! [ -r "$MATRIX" ]; then # and it's not regular or readable...
+			>&2 echo "ERROR: Bad File"
 			exit 1	
 		fi
 	else 
-		>&2 echo "RRRRRRREEEEEEEEEE"
+		>&2 echo "ERROR: File Doesn't Exist"
 		exit 1		
 	fi	
 
@@ -72,15 +72,15 @@ mean(){
 
 	MATRIX=$1
 	if [ -z "$MATRIX"  ] || [ -n "$2" ]; then # command-line-arg validation
-		>&2 echo "RRRRRRREEEEEEEEEE"
+		>&2 echo "ERROR: Invalid Arguments"
 		exit 1
-	elif [ -e "$MATRIX" ]; then
-		if ! [ -f "$MATRIX" ]  || ! [ -r "$MATRIX" ]; then
-			>&2 echo "RRRRRRREEEEEEEEEE"
+	elif [ -e "$MATRIX" ]; then # if file exits...
+		if ! [ -f "$MATRIX" ]  || ! [ -r "$MATRIX" ]; then # and it's not regular or readable...
+			>&2 echo "ERROR: Bad File"
 			exit 1	
 		fi
 	else 
-		>&2 echo "RRRRRRREEEEEEEEEE"
+		>&2 echo "ERROR: File Doesn't Exist"
 		exit 1		
 	fi
 }
@@ -98,26 +98,26 @@ add(){
 	MATRIX_LEFT=$1
 	MATRIX_RIGHT=$2
 	if [ -z "$MATRIX_LEFT"  ] || [ -z "$MATRIX_RIGHT"  ] || [ -n "$3" ]; then # command-line-arg validation
-		>&2 echo "RRRRRRREEEEEEEEEE"
+		>&2 echo "ERROR: Invalid Arguments"
 		exit 1
 	fi
 
 	if [ -e "$MATRIX_LEFT" ]; then # if file exits...
-		if ! [ -f "$MATRIX_LEFT" ]  || ! [ -r "$MATRIX_LEFT" ]; then # and it's not regular...
-			>&2 echo "RRRRRRREEEEEEEEEE"
+		if ! [ -f "$MATRIX_LEFT" ]  || ! [ -r "$MATRIX_LEFT" ]; then # and it's not regular or readable...
+			>&2 echo "ERROR: Bad 1st File"
 			exit 1	
 		fi
 	else 
-		>&2 echo "RRRRRRREEEEEEEEEE"
+		>&2 echo "ERROR: 1st File Doesn't Exist"
 		exit 1		
 	fi	
 	if [ -e "$MATRIX_RIGHT" ]; then # if file exits...
-		if ! [ -f "$MATRIX_RIGHT" ]  || ! [ -r "$MATRIX_RIGHT" ]; then # and it's not regular...
-			>&2 echo "RRRRRRREEEEEEEEEE"
+		if ! [ -f "$MATRIX_RIGHT" ]  || ! [ -r "$MATRIX_RIGHT" ]; then # and it's not regular or readable...
+			>&2 echo "ERROR: Bad 2nd File"
 			exit 1
 		fi
 	else 
-		>&2 echo "RRRRRRREEEEEEEEEE"
+		>&2 echo "ERROR: 2nd File Doesn't Exist"
 		exit 1				
 	fi	
 }
@@ -135,26 +135,26 @@ multiply(){
 	MATRIX_LEFT=$1
 	MATRIX_RIGHT=$2
 	if [ -z "$MATRIX_LEFT"  ] || [ -z "$MATRIX_RIGHT"  ] || [ -n "$3" ]; then # command-line-arg validation
-		>&2 echo "RRRRRRREEEEEEEEEE"
+		>&2 echo "ERROR: Invalid Arguments"
 		exit 1
 	fi
 
 	if [ -e "$MATRIX_LEFT" ]; then # if file exits...
-		if ! [ -f "$MATRIX_LEFT" ]   || ! [ -r "$MATRIX_LEFT" ]; then # and it's not regular...
-			>&2 echo "RRRRRRREEEEEEEEEE"
+		if ! [ -f "$MATRIX_LEFT" ]   || ! [ -r "$MATRIX_LEFT" ]; then # and it's not regular or readable....
+			>&2 echo "ERROR: Bad 1st File"
 			exit 1	
 		fi
 	else 
-		>&2 echo "RRRRRRREEEEEEEEEE"
+		>&2 echo "ERROR: 1st File Doesn't Exist"
 		exit 1		
 	fi	
 	if [ -e "$MATRIX_RIGHT" ]; then # if file exits...
-		if ! [ -f "$MATRIX_RIGHT" ]  || ! [ -r "$MATRIX_RIGHT" ]; then # and it's not regular...
-			>&2 echo "RRRRRRREEEEEEEEEE"
+		if ! [ -f "$MATRIX_RIGHT" ]  || ! [ -r "$MATRIX_RIGHT" ]; then # and it's not regular or readable...
+			>&2 echo "ERROR: Bad 2nd File"
 			exit 1
 		fi
 	else 
-		>&2 echo "RRRRRRREEEEEEEEEE"
+		>&2 echo "ERROR: 2nd File Doesn't Exist"
 		exit 1				
 	fi	
 }
