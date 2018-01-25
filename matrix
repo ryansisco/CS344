@@ -20,18 +20,29 @@ dims(){
 		# Written by Ryan Sisco (siscor@oregonstate.edu)
 
 	MATRIX=$1
-	if [ -z "$MATRIX"  ] || [ -n "$2" ]; then # command-line-arg validation
+	USING_FILE=0
+	if [ -n "$2" ]; then # command-line-arg format validation
 		>&2 echo "ERROR: Invalid Arguments"
 		exit 1
 	elif [ -e "$MATRIX" ]; then # if file exits...
+		USING_FILE=1
 		if ! [ -f "$MATRIX" ] || ! [ -r "$MATRIX" ]; then # and it's not regular or readable...
 			>&2 echo "ERROR: Bad File"
 			exit 1	
-		fi
-	else 
+		fi	
+	elif ! [ -e "$MATRIX" ] && [ -n "$1" ]; then
 		>&2 echo "ERROR: File Doesn't Exist"
-		exit 1		
+		exit 1
 	fi
+
+	if ! [ "$USING_FILE" -eq "1" ]; then 
+		cat /dev/stdin > MATRIX
+	else
+		ROWS=($(wc --lines < "$MATRIX")) # gets number of rows
+		COLUMNS=$((($(wc --words < "$MATRIX"))/ROWS)) #gets number of words/number of rows
+	fi	
+	echo "$ROWS $COLUMNS"	
+	return 0
 }
 
 transpose(){
@@ -45,19 +56,21 @@ transpose(){
 		# Written by Ryan Sisco (siscor@oregonstate.edu)
 
 	MATRIX=$1
-	if [ -z "$MATRIX"  ] || [ -n "$2" ]; then # command-line-arg validation
+	USING_FILE=0
+	if [ -n "$2" ]; then # command-line-arg format validation
 		>&2 echo "ERROR: Invalid Arguments"
 		exit 1
 	elif [ -e "$MATRIX" ]; then # if file exits...
+		USING_FILE=1
 		if ! [ -f "$MATRIX" ] || ! [ -r "$MATRIX" ]; then # and it's not regular or readable...
 			>&2 echo "ERROR: Bad File"
 			exit 1	
-		fi
-	else 
+		fi	
+	elif ! [ -e "$MATRIX" ] && [ -n "$1" ]; then
 		>&2 echo "ERROR: File Doesn't Exist"
-		exit 1		
+		exit 1
 	fi	
-
+	return 0
 }
 
 mean(){
@@ -71,18 +84,21 @@ mean(){
 		# Written by Ryan Sisco (siscor@oregonstate.edu)
 
 	MATRIX=$1
-	if [ -z "$MATRIX"  ] || [ -n "$2" ]; then # command-line-arg validation
+	USING_FILE=0
+	if [ -n "$2" ]; then # command-line-arg format validation
 		>&2 echo "ERROR: Invalid Arguments"
 		exit 1
 	elif [ -e "$MATRIX" ]; then # if file exits...
-		if ! [ -f "$MATRIX" ]  || ! [ -r "$MATRIX" ]; then # and it's not regular or readable...
+		USING_FILE=1
+		if ! [ -f "$MATRIX" ] || ! [ -r "$MATRIX" ]; then # and it's not regular or readable...
 			>&2 echo "ERROR: Bad File"
 			exit 1	
-		fi
-	else 
+		fi	
+	elif ! [ -e "$MATRIX" ] && [ -n "$1" ]; then
 		>&2 echo "ERROR: File Doesn't Exist"
-		exit 1		
+		exit 1
 	fi
+	return 0
 }
 
 add(){
@@ -97,11 +113,10 @@ add(){
 
 	MATRIX_LEFT=$1
 	MATRIX_RIGHT=$2
-	if [ -z "$MATRIX_LEFT"  ] || [ -z "$MATRIX_RIGHT"  ] || [ -n "$3" ]; then # command-line-arg validation
+	if [ -z "$MATRIX_LEFT"  ] || [ -z "$MATRIX_RIGHT"  ] || [ -n "$3" ]; then # command-line-arg format validation
 		>&2 echo "ERROR: Invalid Arguments"
 		exit 1
 	fi
-
 	if [ -e "$MATRIX_LEFT" ]; then # if file exits...
 		if ! [ -f "$MATRIX_LEFT" ]  || ! [ -r "$MATRIX_LEFT" ]; then # and it's not regular or readable...
 			>&2 echo "ERROR: Bad 1st File"
@@ -119,7 +134,18 @@ add(){
 	else 
 		>&2 echo "ERROR: 2nd File Doesn't Exist"
 		exit 1				
+	fi
+	#make sure columns and rows are equal (dim1=dim2)
+	ROWS_L=($(wc --lines < "$MATRIX_LEFT")) # gets number of rows
+	COLUMNS_L=$((($(wc --words < "$MATRIX_LEFT"))/ROWS_L)) #gets number of words/number of rows
+	ROWS_R=($(wc --lines < "$MATRIX_RIGHT")) # gets number of rows
+	COLUMNS_R=$((($(wc --words < "$MATRIX_RIGHT"))/ROWS_R)) #gets number of words/number of rows
+	
+	if ! [ "$ROWS_L" -eq "$ROWS_R" ] || ! [ "$COLUMNS_L" -eq "$COLUMNS_R" ]; then
+		>&2 echo "ERROR: Matrices Are Incompatible"
+		exit 1
 	fi	
+	return 0	
 }
 
 multiply(){
@@ -134,11 +160,10 @@ multiply(){
 
 	MATRIX_LEFT=$1
 	MATRIX_RIGHT=$2
-	if [ -z "$MATRIX_LEFT"  ] || [ -z "$MATRIX_RIGHT"  ] || [ -n "$3" ]; then # command-line-arg validation
+	if [ -z "$MATRIX_LEFT"  ] || [ -z "$MATRIX_RIGHT"  ] || [ -n "$3" ]; then # command-line-arg format validation
 		>&2 echo "ERROR: Invalid Arguments"
 		exit 1
 	fi
-
 	if [ -e "$MATRIX_LEFT" ]; then # if file exits...
 		if ! [ -f "$MATRIX_LEFT" ]   || ! [ -r "$MATRIX_LEFT" ]; then # and it's not regular or readable....
 			>&2 echo "ERROR: Bad 1st File"
@@ -156,7 +181,18 @@ multiply(){
 	else 
 		>&2 echo "ERROR: 2nd File Doesn't Exist"
 		exit 1				
+	fi
+	#make sure columns and rows are equal (dim1=dim2)
+	ROWS_L=($(wc --lines < "$MATRIX_LEFT")) # gets number of rows
+	COLUMNS_L=$((($(wc --words < "$MATRIX_LEFT"))/ROWS_L)) #gets number of words/number of rows
+	ROWS_R=($(wc --lines < "$MATRIX_RIGHT")) # gets number of rows
+	COLUMNS_R=$((($(wc --words < "$MATRIX_RIGHT"))/ROWS_R)) #gets number of words/number of rows
+	
+	if ! [ "$ROWS_L" -eq "$COLUMNS_R" ] || ! [ "$COLUMNS_L" -eq "$ROWS_R" ]; then
+		>&2 echo "ERROR: Matrices Are Incompatible"
+		exit 1
 	fi	
+	return 0	
 }
 
 $1 "${@:2}"
