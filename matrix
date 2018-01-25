@@ -35,13 +35,16 @@ dims(){
 		exit 1
 	fi
 
-	if ! [ "$USING_FILE" -eq "1" ]; then 
-		cat /dev/stdin > MATRIX
+	if ! [ "$USING_FILE" -eq "1" ]; then
+		echo "$(</dev/stdin)" > temporaryfile12324 # moves stdin to temp file with unique name
+		ROWS=($(wc --lines < "./temporaryfile12324")) # gets number of rows
+		COLUMNS=$((($(wc --words < "./temporaryfile12324"))/ROWS)) #gets number of words/number of rows
 	else
 		ROWS=($(wc --lines < "$MATRIX")) # gets number of rows
-		COLUMNS=$((($(wc --words < "$MATRIX"))/ROWS)) #gets number of words/number of rows
-	fi	
-	echo "$ROWS $COLUMNS"	
+		COLUMNS=$((($(wc --words < "$MATRIX"))/ROWS)) #gets number of words/number of rows	
+	fi
+	echo "$ROWS $COLUMNS"
+	rm temporaryfile12324	
 	return 0
 }
 
