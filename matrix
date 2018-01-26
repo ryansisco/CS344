@@ -39,12 +39,13 @@ dims(){
 		echo "$(</dev/stdin)" > temporaryfile12324 # moves stdin to temp file with unique name
 		ROWS=($(wc --lines < "./temporaryfile12324")) # gets number of rows
 		COLUMNS=$((($(wc --words < "./temporaryfile12324"))/ROWS)) #gets number of words/number of rows
+		echo "$ROWS $COLUMNS"
+		rm temporaryfile12324	
 	else
 		ROWS=($(wc --lines < "$MATRIX")) # gets number of rows
 		COLUMNS=$((($(wc --words < "$MATRIX"))/ROWS)) #gets number of words/number of rows	
+		echo "$ROWS $COLUMNS"
 	fi
-	echo "$ROWS $COLUMNS"
-	rm temporaryfile12324	
 	return 0
 }
 
@@ -72,6 +73,23 @@ transpose(){
 	elif ! [ -e "$MATRIX" ] && [ -n "$1" ]; then
 		>&2 echo "ERROR: File Doesn't Exist"
 		exit 1
+	fi
+
+	if ! [ "$USING_FILE" -eq "1" ]; then
+		echo "$(</dev/stdin)" > temporaryfile12324 # moves stdin to temp file with unique name
+		ROWS=($(wc --lines < "./temporaryfile12324")) # gets number of rows
+		COLUMNS=$((($(wc --words < "./temporaryfile12324"))/ROWS)) #gets number of words/number of rows
+		echo "$ROWS $COLUMNS"
+		#for rows
+			#for columns
+				#print array[i]
+				#tab
+			#newline	
+		rm temporaryfile12324	
+	else
+		ROWS=($(wc --lines < "$MATRIX")) # gets number of rows
+		COLUMNS=$((($(wc --words < "$MATRIX"))/ROWS)) #gets number of words/number of rows	
+		echo "$ROWS $COLUMNS"
 	fi	
 	return 0
 }
