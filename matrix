@@ -111,8 +111,8 @@ transpose(){
 		totalcount=0
 		declare -a myarray
 		read -d EOF -ra myarray < $MATRIX
-		while [ $i -lt $COLUMNS ]; do #for rows
-			while [ $j -lt $ROWS ]; do #for columns
+		while [ $i -lt $COLUMNS ]; do #for columns
+			while [ $j -lt $ROWS ]; do #for rows
 				echo -ne "${myarray[$h]}"	#print array[i]
 				j=$((j+1))
 				h=$((h+COLUMNS))
@@ -153,6 +153,74 @@ mean(){
 	elif ! [ -e "$MATRIX" ] && [ -n "$1" ]; then
 		>&2 echo "ERROR: File Doesn't Exist"
 		exit 1
+	fi
+	avg=0
+	if ! [ "$USING_FILE" -eq "1" ]; then #STDIN
+		echo "$(</dev/stdin)" > temporaryfile12324 # moves stdin to temp file with unique name
+		ROWS=($(wc --lines < "./temporaryfile12324")) # gets number of rows
+		COLUMNS=$((($(wc --words < "./temporaryfile12324"))/ROWS)) #gets number of words/number of rows
+		i=0
+		j=0
+		h=0
+		totalcount=0
+		declare -a myarray
+		read -d EOF -ra myarray < ./temporaryfile12324
+		while [ $i -lt $COLUMNS ]; do #for columns
+			while [ $j -lt $ROWS ]; do #for rows
+				arrayval=${myarray[$h]}
+				avg=$((avg+arrayval))
+				j=$((j+1))
+				h=$((h+COLUMNS))	
+			done
+			j=0
+			i=$((i+1))
+			h=$i
+			if [ $avg -lt 0 ]; then	
+				avg=$((((avg-((ROWS/2))))/ROWS))
+			elif [ $avg -gt 0 ]; then 
+				avg=$((((avg+((ROWS/2))))/ROWS))
+			fi
+			echo -n "$avg" 
+			if ! [ $i = $COLUMNS ]; then
+				echo -ne "\t"
+			fi
+			avg=0
+		done
+		#echo -ne "\n"	
+		rm temporaryfile12324	
+	else #FILE INPUT
+		ROWS=($(wc --lines < "$MATRIX")) # gets number of rows
+		COLUMNS=$((($(wc --words < "$MATRIX"))/ROWS)) #gets number of words/number of rows	
+		COLUMNS=$((COLUMNS))
+		ROWS=$((ROWS))
+		i=0
+		j=0
+		h=0
+		totalcount=0
+		declare -a myarray
+		read -d EOF -ra myarray < $MATRIX
+		while [ $i -lt $COLUMNS ]; do #for columns
+			while [ $j -lt $ROWS ]; do #for rows
+				arrayval=${myarray[$h]}
+				avg=$((avg+arrayval))
+				j=$((j+1))
+				h=$((h+COLUMNS))	
+			done
+			j=0
+			i=$((i+1))
+			h=$i
+			if [ $avg -lt 0 ]; then	
+				avg=$((((avg-((ROWS/2))))/ROWS))
+			elif [ $avg -gt 0 ]; then 
+				avg=$((((avg+((ROWS/2))))/ROWS))
+			fi
+			echo -n "$avg"
+			if ! [ $i = $COLUMNS ]; then
+				echo -ne "\t"
+			fi
+			avg=0
+		done
+		#echo -ne "\n"
 	fi
 	return 0
 }
