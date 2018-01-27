@@ -268,7 +268,30 @@ add(){
 	if ! [ "$ROWS_L" -eq "$ROWS_R" ] || ! [ "$COLUMNS_L" -eq "$COLUMNS_R" ]; then
 		>&2 echo "ERROR: Matrices Are Incompatible"
 		exit 1
-	fi	
+	fi
+	#
+	#
+	read -d EOF -ra array1 < $MATRIX_LEFT
+	read -d EOF -ra array2 < $MATRIX_RIGHT
+	i=0
+	j=0
+	h=0
+	while [ $i -lt $ROWS_R ]; do #for columns
+		while [ $j -lt $COLUMNS_R ]; do #for rows
+			arrayval=$(((${array1[$h]}+${array2[$h]})))
+			echo -ne "$arrayval"
+			j=$((j+1))
+			h=$((h+1))
+			if ! [ $j = $((COLUMNS_R)) ]; then
+				echo -ne "\t" #tab
+			fi	
+		done
+		j=0
+		i=$((i+1))
+		if ! [ $i = $ROWS_R ]; then
+			echo -ne "\n"
+		fi
+	done
 	return 0	
 }
 
@@ -312,10 +335,31 @@ multiply(){
 	ROWS_R=($(wc --lines < "$MATRIX_RIGHT")) # gets number of rows
 	COLUMNS_R=$((($(wc --words < "$MATRIX_RIGHT"))/ROWS_R)) #gets number of words/number of rows
 	
-	if ! [ "$ROWS_L" -eq "$COLUMNS_R" ] || ! [ "$COLUMNS_L" -eq "$ROWS_R" ]; then
+	if ! [ "$COLUMNS_L" -eq "$ROWS_R" ]; then
 		>&2 echo "ERROR: Matrices Are Incompatible"
 		exit 1
 	fi	
+	read -d EOF -ra array1 < $MATRIX_LEFT
+	read -d EOF -ra array2 < $MATRIX_RIGHT
+	i=0
+	j=0
+	h=0
+	while [ $i -lt $ROWS_R ]; do #for columns
+		while [ $j -lt $COLUMNS_R ]; do #for rows
+			arrayval=$(((${array1[$h]}*${array2[$h]})))
+			echo -ne "$arrayval"
+			j=$((j+1))
+			h=$((h+1))
+			if ! [ $j = $((COLUMNS_R)) ]; then
+				echo -ne "\t" #tab
+			fi	
+		done
+		j=0
+		i=$((i+1))
+		if ! [ $i = $ROWS_R ]; then
+			echo -ne "\n"
+		fi
+	done
 	return 0	
 }
 
