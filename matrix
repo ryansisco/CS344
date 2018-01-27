@@ -79,17 +79,52 @@ transpose(){
 		echo "$(</dev/stdin)" > temporaryfile12324 # moves stdin to temp file with unique name
 		ROWS=($(wc --lines < "./temporaryfile12324")) # gets number of rows
 		COLUMNS=$((($(wc --words < "./temporaryfile12324"))/ROWS)) #gets number of words/number of rows
-		echo "$ROWS $COLUMNS"
-		#for rows
-			#for columns
-				#print array[i]
-				#tab
-			#newline	
+		i=0
+		j=0
+		h=0
+		totalcount=0
+		declare -a myarray
+		read -d EOF -ra myarray < ./temporaryfile12324
+		while [ $i -lt $COLUMNS ]; do #for rows
+			while [ $j -lt $ROWS ]; do #for columns
+				echo -ne "${myarray[$h]}" #print array[i]
+				j=$((j+1))
+				h=$((h+COLUMNS))
+				if ! [ $j = $((ROWS)) ]; then
+					echo -ne "\t" #tab
+				fi		
+			done
+			j=0
+			i=$((i+1))
+			h=$i
+			echo -ne "\n" #newline
+		done		
 		rm temporaryfile12324	
 	else
 		ROWS=($(wc --lines < "$MATRIX")) # gets number of rows
 		COLUMNS=$((($(wc --words < "$MATRIX"))/ROWS)) #gets number of words/number of rows	
-		echo "$ROWS $COLUMNS"
+		COLUMNS=$((COLUMNS))
+		ROWS=$((ROWS))
+		i=0
+		j=0
+		h=0
+		totalcount=0
+		declare -a myarray
+		read -d EOF -ra myarray < $MATRIX
+		while [ $i -lt $COLUMNS ]; do #for rows
+			while [ $j -lt $ROWS ]; do #for columns
+				echo -ne "${myarray[$h]}"	#print array[i]
+				j=$((j+1))
+				h=$((h+COLUMNS))
+				if ! [ $j = $((ROWS)) ]; then
+					echo -ne "\t" #tab
+				fi		
+			done
+			j=0
+			i=$((i+1))
+			h=$i
+			echo -ne "\n" #newline
+		done
 	fi	
 	return 0
 }
