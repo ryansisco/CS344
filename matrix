@@ -291,7 +291,24 @@ multiply(){
 	#SYNOPSIS
 		# 2 arrays will be multiplied
 	#DESCRIPTION
-		# 2 arrays will be multiplied if they are able to be
+		# 2 arrays will be multiplied if they are able to be.
+		# The first one is converted to array, second one is as well.
+		# The second one is transposed, giving it a better "shape" for the rest of the function.
+		# The actual work of the function goes like this:
+		# FOR NUMBER OF FIRST MATRIX ROWS {
+			# FOR NUMBER OF SECOND MATRIX COLUMNS {
+				# FOR NUMBER OF FIRST MATRIX COLUMNS OR SECOND MATRIX ROWS {
+					# TEMP = (FIRST_MATRIX_ARRAY[i] * SECOND_MATRIX_ARRAY[j]) + TEMP
+					# i++
+					# j++
+				# }
+				# PRINT TEMP & TAB
+				# i = 0
+			# }
+			# j = 0
+			# PRINT NEW LINE
+			# i = FIRST MATRIX COLUMNS + OLD i
+		# }
 	#AUTHOR
 		# Written by Ryan Sisco (siscor@oregonstate.edu)
 
