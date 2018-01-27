@@ -21,6 +21,7 @@ dims(){
 
 	MATRIX=$1
 	USING_FILE=0
+	### BEGIN INPUT CHECKING
 	if [ -n "$2" ]; then # command-line-arg format validation
 		>&2 echo "ERROR: Invalid Arguments"
 		exit 1
@@ -34,18 +35,17 @@ dims(){
 		>&2 echo "ERROR: File Doesn't Exist"
 		exit 1
 	fi
-
-	if ! [ "$USING_FILE" -eq "1" ]; then
+	### END INPUT CHECKING
+	if ! [ "$USING_FILE" -eq "1" ]; then # if not using a file...
 		echo "$(</dev/stdin)" > temporaryfile12324 # moves stdin to temp file with unique name
 		ROWS=($(wc --lines < "./temporaryfile12324")) # gets number of rows
-		COLUMNS=$((($(wc --words < "./temporaryfile12324"))/ROWS)) #gets number of words/number of rows
-		echo "$ROWS $COLUMNS"
-		rm temporaryfile12324	
-	else
+		COLUMNS=$((($(wc --words < "./temporaryfile12324"))/ROWS)) # gets number of words/number of rows
+		rm temporaryfile12324 # deletes tempfile
+	else #if using a file
 		ROWS=($(wc --lines < "$MATRIX")) # gets number of rows
-		COLUMNS=$((($(wc --words < "$MATRIX"))/ROWS)) #gets number of words/number of rows	
-		echo "$ROWS $COLUMNS"
+		COLUMNS=$((($(wc --words < "$MATRIX"))/ROWS)) # gets number of words/number of rows	
 	fi
+	echo "$ROWS $COLUMNS" # prints final answer
 	return 0
 }
 
@@ -61,6 +61,7 @@ transpose(){
 
 	MATRIX=$1
 	USING_FILE=0
+	### BEGIN INPUT CHECKING
 	if [ -n "$2" ]; then # command-line-arg format validation
 		>&2 echo "ERROR: Invalid Arguments"
 		exit 1
@@ -74,56 +75,50 @@ transpose(){
 		>&2 echo "ERROR: File Doesn't Exist"
 		exit 1
 	fi
-
-	if ! [ "$USING_FILE" -eq "1" ]; then
+	### END INPUT CHECKING 
+	if ! [ "$USING_FILE" -eq "1" ]; then # if not using a file...
 		echo "$(</dev/stdin)" > temporaryfile12324 # moves stdin to temp file with unique name
 		ROWS=($(wc --lines < "./temporaryfile12324")) # gets number of rows
-		COLUMNS=$((($(wc --words < "./temporaryfile12324"))/ROWS)) #gets number of words/number of rows
-		i=0
-		j=0
-		h=0
-		totalcount=0
-		declare -a myarray
-		read -d EOF -ra myarray < ./temporaryfile12324
-		while [ $i -lt $COLUMNS ]; do #for rows
-			while [ $j -lt $ROWS ]; do #for columns
-				echo -ne "${myarray[$h]}" #print array[i]
-				j=$((j+1))
-				h=$((h+COLUMNS))
-				if ! [ $j = $((ROWS)) ]; then
-					echo -ne "\t" #tab
+		COLUMNS=$((($(wc --words < "./temporaryfile12324"))/ROWS)) # gets number of words/number of rows (gives columns)
+		i=0 # Counter for columns
+		j=0 # Counter for rows
+		h=0 # array value
+		read -d EOF -ra myarray < ./temporaryfile12324 # pushes contents from tempfile into array
+		while [ $i -lt $COLUMNS ]; do # for columns
+			while [ $j -lt $ROWS ]; do # for rows
+				echo -ne "${myarray[$h]}" # print array[h]
+				j=$((j+1))	# iterates
+				h=$((h+COLUMNS)) # iterates in chunks by columns. ex: array[0], array[4], array[8]
+				if ! [ $j = $((ROWS)) ]; then # if it's NOT the last one in a row
+					echo -ne "\t" # tab
 				fi		
 			done
-			j=0
-			i=$((i+1))
-			h=$i
-			echo -ne "\n" #newline
+			j=0 # reset rows
+			i=$((i+1)) # iterate columns
+			h=$i # put h back on track with columns
+			echo -ne "\n" # newline
 		done		
-		rm temporaryfile12324	
-	else
+		rm temporaryfile12324 # deletes temp file	
+	else # if using a file...
 		ROWS=($(wc --lines < "$MATRIX")) # gets number of rows
-		COLUMNS=$((($(wc --words < "$MATRIX"))/ROWS)) #gets number of words/number of rows	
-		COLUMNS=$((COLUMNS))
-		ROWS=$((ROWS))
-		i=0
-		j=0
-		h=0
-		totalcount=0
-		declare -a myarray
-		read -d EOF -ra myarray < $MATRIX
+		COLUMNS=$((($(wc --words < "$MATRIX"))/ROWS)) # gets number of words/number of rows (gives columns)	
+		i=0 # Counter for columns
+		j=0 # Counter for rows
+		h=0 # array value
+		read -d EOF -ra myarray < $MATRIX # pushes contents from given file into array
 		while [ $i -lt $COLUMNS ]; do #for columns
 			while [ $j -lt $ROWS ]; do #for rows
 				echo -ne "${myarray[$h]}"	#print array[i]
-				j=$((j+1))
-				h=$((h+COLUMNS))
-				if ! [ $j = $((ROWS)) ]; then
-					echo -ne "\t" #tab
+				j=$((j+1))	# iterates
+				h=$((h+COLUMNS)) # iterates in chunks by columns. ex: array[0], array[4], array[8]
+				if ! [ $j = $((ROWS)) ]; then # if it's NOT the last one in a row
+					echo -ne "\t" # tab
 				fi		
 			done
-			j=0
-			i=$((i+1))
-			h=$i
-			echo -ne "\n" #newline
+			j=0 # reset rows
+			i=$((i+1)) # iterate columns
+			h=$i # put h back on track with columns
+			echo -ne "\n" # newline
 		done
 	fi	
 	return 0
@@ -141,6 +136,7 @@ mean(){
 
 	MATRIX=$1
 	USING_FILE=0
+	### BEGIN INPUT CHECKING
 	if [ -n "$2" ]; then # command-line-arg format validation
 		>&2 echo "ERROR: Invalid Arguments"
 		exit 1
@@ -154,71 +150,67 @@ mean(){
 		>&2 echo "ERROR: File Doesn't Exist"
 		exit 1
 	fi
-	avg=0
-	if ! [ "$USING_FILE" -eq "1" ]; then #STDIN
+	### END INPUT CHECKING
+	if ! [ "$USING_FILE" -eq "1" ]; then # if not using a file...
 		echo "$(</dev/stdin)" > temporaryfile12324 # moves stdin to temp file with unique name
 		ROWS=($(wc --lines < "./temporaryfile12324")) # gets number of rows
 		COLUMNS=$((($(wc --words < "./temporaryfile12324"))/ROWS)) #gets number of words/number of rows
-		i=0
-		j=0
-		h=0
-		totalcount=0
-		declare -a myarray
-		read -d EOF -ra myarray < ./temporaryfile12324
+		i=0 # Counter for columns
+		j=0 # Counter for rows
+		h=0 # array value
+		read -d EOF -ra myarray < ./temporaryfile12324 # pushes contents from tempfile into array
 		while [ $i -lt $COLUMNS ]; do #for columns
 			while [ $j -lt $ROWS ]; do #for rows
-				arrayval=${myarray[$h]}
-				avg=$((avg+arrayval))
-				j=$((j+1))
-				h=$((h+COLUMNS))	
+				arrayval=${myarray[$h]} # stores value for easier manipulation
+				avg=$((avg+arrayval)) # adds onto average
+				j=$((j+1)) # iterates
+				h=$((h+COLUMNS)) # iterates in chunks	
 			done
-			j=0
-			i=$((i+1))
-			h=$i
-			if [ $avg -lt 0 ]; then	
-				avg=$((((avg-((ROWS/2))))/ROWS))
-			elif [ $avg -gt 0 ]; then 
-				avg=$((((avg+((ROWS/2))))/ROWS))
+			j=0 # resets rows
+			i=$((i+1)) # iterates columns
+			h=$i # gets h back on track with columns
+			if [ $avg -lt 0 ]; then	# if average is negative...
+				avg=$((((avg-((ROWS/2))))/ROWS)) # find average with rounding for negatives
+			elif [ $avg -gt 0 ]; then # if average is positive...
+				avg=$((((avg+((ROWS/2))))/ROWS)) # find average with rounding for positives
 			fi
 			echo -n "$avg" 
-			if ! [ $i = $COLUMNS ]; then
-				echo -ne "\t"
+			if ! [ $i = $COLUMNS ]; then # if it's NOT the last one...
+				echo -ne "\t" # tab
 			fi
-			avg=0
+			avg=0 # get avg ready for next average
 		done
 		#echo -ne "\n"	
-		rm temporaryfile12324	
-	else #FILE INPUT
+		rm temporaryfile12324 # delete temp file
+	else # if using a file...
 		ROWS=($(wc --lines < "$MATRIX")) # gets number of rows
 		COLUMNS=$((($(wc --words < "$MATRIX"))/ROWS)) #gets number of words/number of rows	
-		COLUMNS=$((COLUMNS))
-		ROWS=$((ROWS))
-		i=0
-		j=0
-		h=0
+		i=0 # Counter for columns
+		j=0 # Counter for rows
+		h=0 # array value
 		totalcount=0
 		declare -a myarray
 		read -d EOF -ra myarray < $MATRIX
 		while [ $i -lt $COLUMNS ]; do #for columns
 			while [ $j -lt $ROWS ]; do #for rows
-				arrayval=${myarray[$h]}
-				avg=$((avg+arrayval))
-				j=$((j+1))
-				h=$((h+COLUMNS))	
+				arrayval=${myarray[$h]} # stores value for easier manipulation
+				avg=$((avg+arrayval)) # adds onto average
+				j=$((j+1)) # iterates
+				h=$((h+COLUMNS)) # iterates in chunks	
 			done
-			j=0
-			i=$((i+1))
-			h=$i
-			if [ $avg -lt 0 ]; then	
-				avg=$((((avg-((ROWS/2))))/ROWS))
-			elif [ $avg -gt 0 ]; then 
-				avg=$((((avg+((ROWS/2))))/ROWS))
+			j=0 # resets rows
+			i=$((i+1)) # iterates columns
+			h=$i # gets h back on track with columns
+			if [ $avg -lt 0 ]; then	# if average is negative...
+				avg=$((((avg-((ROWS/2))))/ROWS)) # find average with rounding for negatives
+			elif [ $avg -gt 0 ]; then # if average is positive...
+				avg=$((((avg+((ROWS/2))))/ROWS)) # find average with rounding for positives
 			fi
-			echo -n "$avg"
-			if ! [ $i = $COLUMNS ]; then
-				echo -ne "\t"
+			echo -n "$avg" 
+			if ! [ $i = $COLUMNS ]; then # if it's NOT the last one...
+				echo -ne "\t" # tab
 			fi
-			avg=0
+			avg=0 # get avg ready for next average
 		done
 		#echo -ne "\n"
 	fi
@@ -237,6 +229,7 @@ add(){
 
 	MATRIX_LEFT=$1
 	MATRIX_RIGHT=$2
+	### BEGIN INPUT CHECKING
 	if [ -z "$MATRIX_LEFT"  ] || [ -z "$MATRIX_RIGHT"  ] || [ -n "$3" ]; then # command-line-arg format validation
 		>&2 echo "ERROR: Invalid Arguments"
 		exit 1
@@ -265,32 +258,29 @@ add(){
 	ROWS_R=($(wc --lines < "$MATRIX_RIGHT")) # gets number of rows
 	COLUMNS_R=$((($(wc --words < "$MATRIX_RIGHT"))/ROWS_R)) #gets number of words/number of rows
 	
-	if ! [ "$ROWS_L" -eq "$ROWS_R" ] || ! [ "$COLUMNS_L" -eq "$COLUMNS_R" ]; then
+	if ! [ "$ROWS_L" -eq "$ROWS_R" ] || ! [ "$COLUMNS_L" -eq "$COLUMNS_R" ]; then # checks matrix rules
 		>&2 echo "ERROR: Matrices Are Incompatible"
 		exit 1
 	fi
-	#
-	#
-	read -d EOF -ra array1 < $MATRIX_LEFT
-	read -d EOF -ra array2 < $MATRIX_RIGHT
-	i=0
-	j=0
-	h=0
-	while [ $i -lt $ROWS_R ]; do #for columns
-		while [ $j -lt $COLUMNS_R ]; do #for rows
-			arrayval=$(((${array1[$h]}+${array2[$h]})))
-			echo -ne "$arrayval"
-			j=$((j+1))
-			h=$((h+1))
-			if ! [ $j = $((COLUMNS_R)) ]; then
+	### END INPUT CHECK
+	read -d EOF -ra array1 < $MATRIX_LEFT # pulls in first command line arg
+	read -d EOF -ra array2 < $MATRIX_RIGHT # pulls in second command line arg
+	i=0 # counter for rows
+	j=0 # counter for columns
+	h=0 # all time counter for array values
+	while [ $i -lt $ROWS_R ]; do #for rows
+		while [ $j -lt $COLUMNS_R ]; do #for columns
+			arrayval=$(((${array1[$h]}+${array2[$h]}))) # adds value file1[h] and file2[h]
+			echo -ne "$arrayval" # prints
+			j=$((j+1)) # iterate
+			h=$((h+1)) # iterate
+			if ! [ $j = $((COLUMNS_R)) ]; then # if NOT the last one...
 				echo -ne "\t" #tab
 			fi	
 		done
-		j=0
-		i=$((i+1))
-		if ! [ $i = $ROWS_R ]; then
-			echo -ne "\n"
-		fi
+		j=0 # reset
+		i=$((i+1)) # iterate
+		echo -ne "\n" #newline
 	done
 	return 0	
 }
@@ -307,6 +297,7 @@ multiply(){
 
 	MATRIX_LEFT=$1
 	MATRIX_RIGHT=$2
+	### BEGIN INPUT CHECKING 
 	if [ -z "$MATRIX_LEFT"  ] || [ -z "$MATRIX_RIGHT"  ] || [ -n "$3" ]; then # command-line-arg format validation
 		>&2 echo "ERROR: Invalid Arguments"
 		exit 1
@@ -331,22 +322,23 @@ multiply(){
 	fi
 	#make sure columns and rows are equal (dim1=dim2)
 	ROWS_L=($(wc --lines < "$MATRIX_LEFT")) # gets number of rows
-	COLUMNS_L=$((($(wc --words < "$MATRIX_LEFT"))/ROWS_L)) #gets number of words/number of rows
+	COLUMNS_L=$((($(wc --words < "$MATRIX_LEFT"))/ROWS_L)) #gets number of words/number of rows (columns)
 	ROWS_R=($(wc --lines < "$MATRIX_RIGHT")) # gets number of rows
-	COLUMNS_R=$((($(wc --words < "$MATRIX_RIGHT"))/ROWS_R)) #gets number of words/number of rows
+	COLUMNS_R=$((($(wc --words < "$MATRIX_RIGHT"))/ROWS_R)) #gets number of words/number of rows (columns)
 	if ! [ "$COLUMNS_L" -eq "$ROWS_R" ]; then
 	 	>&2 echo "ERROR: Matrices Are Incompatible"
 	 	exit 1
 	fi
-	#
-	i=0
-	j=0
-	h=0
-	totalcount=0
+	### END INPUT CHECKING
+	### TRANSPOSING ARRAY2 - this is done to make both arrays work in the same loops, iterating based on row/column differences  
+	i=0 # counter for columns
+	j=0 # counter for rows
+	h=0 # array var
+	totalcount=0 # gives total count of array
 	read -d EOF -ra myarray < $MATRIX_RIGHT
-	while [ $i -lt $COLUMNS_R ]; do #for columns
-		while [ $j -lt $ROWS_R ]; do #for rows
-			array2[$totalcount]="${myarray[$h]}"
+	while [ $i -lt $COLUMNS_R ]; do # for columns
+		while [ $j -lt $ROWS_R ]; do # for rows
+			array2[$totalcount]="${myarray[$h]}" # fills new array correctly, same code as transpose but filling new array instead of printing
 			j=$((j+1))
 			h=$((h+COLUMNS_R))
 			totalcount=$((totalcount+1))		
@@ -355,40 +347,40 @@ multiply(){
 		i=$((i+1))
 		h=$i
 	done
-	#
+	
 	read -d EOF -ra array1 < $MATRIX_LEFT
-	a=0
-	b=0
-	c=0
-	i=0
-	h=0
-	default=0
-	while [ $a -lt $ROWS_L ]; do #for left rows
-		while [ $b -lt $COLUMNS_R ]; do #for right columns
-			while [ $c -lt $COLUMNS_L ]; do #for left columns
-				temptemp=$(((${array1[$i]}*${array2[$h]})))
-				temp=$((temp+temptemp))
-				h=$((h+1))
-				i=$((i+1))
-				c=$((c+1))
+	a=0 # iterate for First Matrix Rows (FMR)
+	b=0 # iterate for Second Matrix Columns (SMC)
+	c=0 # iterate for First Matrix Columns (same as Second Matrix Rows) (FMC)
+	i=0 # var for First Matrix (FMV)
+	h=0 # var for Second Matrix (SMV)
+	default=0 # place holder for First Matrix Var. Holds value during clears/cycles.
+	while [ $a -lt $ROWS_L ]; do # for left rows
+		while [ $b -lt $COLUMNS_R ]; do # for right columns
+			while [ $c -lt $COLUMNS_L ]; do # for left columns
+				temptemp=$(((${array1[$i]}*${array2[$h]}))) # multiplies appropriate values in each array and stores them
+				temp=$((temp+temptemp)) # adds all stored values together
+				h=$((h+1)) # iterates SMV
+				i=$((i+1)) # iterates FMV
+				c=$((c+1)) # loops FMC
 			done
-			echo -ne "$temp"
-			if ! [ $b = $((COLUMNS_R-1)) ]; then
-				echo -ne "\t" #tab
-			fi
-			temp=0
-			i=$default
-			c=0
-			b=$((b+1))
+			echo -ne "$temp" # prints multiplied + added value for row
+			if ! [ $b = $((COLUMNS_R-1)) ]; then # if NOT last one...
+				echo -ne "\t" # tab
+			fi 
+			temp=0 # clears temp
+			i=$default # sets FMV to placeholder
+			c=0 # clears FMC
+			b=$((b+1)) # loops SMC
 		done
-		b=0
-		h=0
-		a=$((a+1))
-		i=$((COLUMNS_L*a))
-		default=$i
+		b=0 # clears SMC
+		h=0 # clears SMV
+		a=$((a+1)) # iterates FMR
+		i=$((COLUMNS_L*a)) # skips FMV to next row
+		default=$i # default stores value of FMV
 		echo -ne "\n"
 	done
 	return 0	
 }
 
-$1 "${@:2}"
+$1 "${@:2}" # pumps in command line args to functions
